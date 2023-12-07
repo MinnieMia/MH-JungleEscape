@@ -8,6 +8,9 @@ public class Jump : MonoBehaviour
 
     float jumpForce = 5.7f;
 
+    public bool isGrounded;
+
+    float fallMultiplayer = 1.5f;
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -15,8 +18,15 @@ public class Jump : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetButtonDown("Jump")){
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, .15f);
+        Debug.DrawRay(transform.position, Vector3.down * .15f, Color.red);
+
+        if(Input.GetButtonDown("Jump") && isGrounded){
             rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        if(rigidbody.velocity.y < 0){
+            rigidbody.velocity += Physics.gravity * fallMultiplayer * Time.deltaTime;
         }
     }
 }
